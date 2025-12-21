@@ -2,33 +2,30 @@
 #+AUTHOR: Chithresh
 #+STARTUP: content
 
-
 * UI Tweaks
 ** Decluttering the UI
-
 #+begin_src emacs-lisp
-  (setq inhibit-startup-message t  ; Don't show the splash screen
-        use-short-answers t        ; Use y or n instead of yes or no
-        visible-bell t)            ; Flash Screen instead of Audible Bell
+  (setq inhibit-startup-message t            ; Don't show the splash screen
+        use-short-answers t                  ; Use y or n instead of yes or no
+        visible-bell t)                      ; Flash Screen instead of Audible Bell
 
-  (menu-bar-mode -1)               ; Hide Menu Bar
-  (tool-bar-mode -1)               ; Hide Tool Bar
-  (scroll-bar-mode -1)             ; Hide Scroll Bar
-  (fringe-mode 10)                 ; Add some Space to the Left & Right Border
+  (menu-bar-mode -1)                         ; Hide Menu Bar
+  (tool-bar-mode -1)                         ; Hide Tool Bar
+  (scroll-bar-mode -1)                       ; Hide Scroll Bar
+  (fringe-mode 10)                           ; Add some Space to the Left & Right Border
+  (setq display-line-numbers-width 4)        ; Set the width for line numbers
+  (setq display-line-numbers-width-start t)  ; Ensure it adjusts only once at startup
 #+end_src
 
 ** Line & Column Numbers
-
 #+begin_src emacs-lisp
-  (global-display-line-numbers-mode 1)      ; Enable Line Numbers
-  (setq display-line-numbers-type 'visual)  ; Relative Line Numbers
-  (setq column-number-mode t)               ; Set Column Numbers
+  (global-display-line-numbers-mode 1)        ; Enable Line Numbers
+  (setq display-line-numbers-type 'relative)  ; Relative Line Numbers (or Visual)
+  (setq column-number-mode t)                 ; Set Column Numbers
 #+end_src
-
 
 * Package Manager Setup
 ** Elpaca
-
 #+begin_src emacs-lisp
   (defvar elpaca-installer-version 0.11)
   (defvar elpaca-directory (expand-file-name "elpaca/" user-emacs-directory))
@@ -71,7 +68,6 @@
 #+end_src
 
 ** Use-Package Support for Elpaca
-
 #+begin_src emacs-lisp
   ;; Install use-package support
   (elpaca elpaca-use-package
@@ -83,9 +79,7 @@
   (setq use-package-always-ensure t)
 #+end_src
 
-
 * Modus Theme
-
 #+begin_src emacs-lisp
   (setq modus-themes-mode-line '(accented borderless)
         modus-themes-bold-constructs t
@@ -98,14 +92,12 @@
         modus-themes-scale-headings t
         modus-themes-region '(bg-only))
 
-  ;; Load the light theme by default
-  (load-theme 'modus-operandi-tinted t)
+  ;; Load the dark theme by default
+  (load-theme 'modus-vivendi-tinted t)
 #+end_src
-
 
 * Packages and Config
 ** Evil Mode
-
 #+begin_src emacs-lisp
   (use-package evil
     :demand t
@@ -120,36 +112,42 @@
 #+end_src
 
 ** Evil Collection
-
 #+begin_src emacs-lisp
   (use-package evil-collection
     :after evil
     :custom
-    (evil-collection-setup-minibuffer t) ; Enable Evil Mode in MiniBuffer
+    (evil-collection-setup-minibuffer t)  ; Enable Evil Mode in MiniBuffer
     :config
     (evil-collection-init))
 #+end_src
 
+** Dired
+#+begin_src emacs-lisp
+  (use-package dired
+    :ensure nil  ; built-in
+    :defer t
+    :hook
+      (dired-mode . dired-hide-details-mode))
+    :config
+      (setq dired-listing-switches "-aBhl  --group-directories-first")
+#+end_src
+
 ** Engraved Faces
 For properly formatting code blocks in org-mode latex export
-
 #+begin_src emacs-lisp
   (use-package engrave-faces)
 #+end_src
 
 ** Modeline Bell
-Blinking the Modeline instead of Visual Bell.
-
+Blinking the Modeline instead of Visual Bell
 #+begin_src emacs-lisp
   (use-package mode-line-bell
     :custom
     (mode-line-bell-mode t))
 #+end_src
 
-
 * Org Mode
 ** Org-Babel
-
 #+begin_src emacs-lisp
   (org-babel-do-load-languages
     'org-babel-load-languages
@@ -158,16 +156,13 @@ Blinking the Modeline instead of Visual Bell.
 
 ** Org-Latex
 *** Org-Latex-Extras
-
 #+begin_src emacs-lisp
   (setq org-latex-src-block-backend 'engraved)     ; Set src block formatting backend to Engraved
-  (setq org-latex-engraved-theme 'doom-one-light)  ; Set doom-one-light theme for Latex Code Block Export
+  ;;(setq org-latex-engraved-theme 'doom-one-light)  ; Set doom-one-light theme for Latex Code Block Export
 #+end_src
-
 
 * Keybindings
 ** Custom Keybindings
-
 #+begin_src emacs-lisp
   (global-set-key (kbd "<escape>") 'keyboard-escape-quit)  ; ESC quits Prompts (Partially Works)
 #+end_src
