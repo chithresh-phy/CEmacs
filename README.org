@@ -75,7 +75,7 @@
     (elpaca-use-package-mode))
 
   ;; Install all Packages instead of :ensure t for Every Package
-  ;; Specifiy :ensure nil for Packages which should not be Installed Automatically
+  ;; Specifiy :ensure nil for Packages which should not be Installed Automatically (or for Built-in Packages)
   (setq use-package-always-ensure t)
 #+end_src
 
@@ -124,14 +124,40 @@
 ** Dired
 #+begin_src emacs-lisp
   (use-package dired
-    :ensure nil  ; built-in
+    :ensure nil  ; Built-in
     :defer t
     :hook
       (dired-mode . dired-hide-details-mode))
     :config
       (setq dired-listing-switches "-aBhl  --group-directories-first")
+      (setq dired-kill-when-opening-new-dired-buffer t)  ; Open all Directories in the Same Dired Buffer
 #+end_src
 
+** SHELL
+Config for M-x Shell
+#+begin_src emacs-lisp
+  (setq explicit-shell-file-name "/usr/bin/bash")
+  (setq comint-prompt-read-only t)  ; Make Shell Prompt Read Only
+#+end_src
+
+** Tramp
+#+begin_src emacs-lisp
+    (connection-local-set-profile-variables 'remote-bash
+       '((shell-file-name . "/usr/bin/bash")
+         (shell-command-switch . "-lc")  ; -l is required to load ENV variables & PATH
+         (shell-interactive-switch . "-i")
+         (shell-login-switch . "-l")))
+    (connection-local-set-profiles
+       '(:application tramp) 'remote-bash) ; set bash as default shell for all tramp connections
+#+end_src
+
+** Which Key
+#+begin_src emacs-lisp
+  (use-package which-key
+    :ensure nil  ; Built-in
+    :config
+    (which-key-mode))
+#+end_src
 ** Engraved Faces
 For properly formatting code blocks in org-mode latex export
 #+begin_src emacs-lisp
@@ -147,22 +173,30 @@ Blinking the Modeline instead of Visual Bell
 #+end_src
 
 * Org Mode
-** Org-Babel
+** Org Babel
 #+begin_src emacs-lisp
   (org-babel-do-load-languages
     'org-babel-load-languages
     '((python . t)))
 #+end_src
 
-** Org-Latex
-*** Org-Latex-Extras
+** Org Latex
 #+begin_src emacs-lisp
   (setq org-latex-src-block-backend 'engraved)     ; Set src block formatting backend to Engraved
   ;;(setq org-latex-engraved-theme 'doom-one-light)  ; Set doom-one-light theme for Latex Code Block Export
 #+end_src
 
 * Keybindings
-** Custom Keybindings
+** Window Management
+#+begin_src emacs-lisp
+  ;; Window Management
+  ;;(global-set-key (kbd "<C-up>") 'shrink-window)
+  ;;(global-set-key (kbd "<C-down>") 'enlarge-window)
+  ;;(global-set-key (kbd "<C-left>") 'shrink-window-horizontally)
+  ;;(global-set-key (kbd "<C-right>") 'enlarge-window-horizontally)
+#+end_src
+
+** Global Keybinds
 #+begin_src emacs-lisp
   (global-set-key (kbd "<escape>") 'keyboard-escape-quit)  ; ESC quits Prompts (Partially Works)
 #+end_src
