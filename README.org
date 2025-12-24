@@ -158,6 +158,7 @@ Config for M-x Shell
     :config
     (which-key-mode))
 #+end_src
+
 ** Engraved Faces
 For properly formatting code blocks in org-mode latex export
 #+begin_src emacs-lisp
@@ -190,10 +191,10 @@ Blinking the Modeline instead of Visual Bell
 ** Window Management
 #+begin_src emacs-lisp
   ;; Window Management
-  ;;(global-set-key (kbd "<C-up>") 'shrink-window)
-  ;;(global-set-key (kbd "<C-down>") 'enlarge-window)
-  ;;(global-set-key (kbd "<C-left>") 'shrink-window-horizontally)
-  ;;(global-set-key (kbd "<C-right>") 'enlarge-window-horizontally)
+  ;; (global-set-key (kbd "<C-up>") 'shrink-window)
+  ;; (global-set-key (kbd "<C-down>") 'enlarge-window)
+  ;; (global-set-key (kbd "<C-left>") 'shrink-window-horizontally)
+  ;; (global-set-key (kbd "<C-right>") 'enlarge-window-horizontally)
 #+end_src
 
 ** Global Keybinds
