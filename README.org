@@ -142,13 +142,36 @@ Config for M-x Shell
 
 ** Tramp
 #+begin_src emacs-lisp
-    (connection-local-set-profile-variables 'remote-bash
-       '((shell-file-name . "/usr/bin/bash")
-         (shell-command-switch . "-lc")  ; -l is required to load ENV variables & PATH
-         (shell-interactive-switch . "-i")
-         (shell-login-switch . "-l")))
-    (connection-local-set-profiles
-       '(:application tramp) 'remote-bash) ; set bash as default shell for all tramp connections
+  (connection-local-set-profile-variables 'remote-bash
+     '((shell-file-name . "/usr/bin/bash")
+       (shell-command-switch . "-lc")  ; -l is required to load ENV variables & PATH
+       (shell-interactive-switch . "-i")
+       (shell-login-switch . "-l")))
+  (connection-local-set-profiles
+     '(:application tramp) 'remote-bash) ; set bash as default shell for all tramp connections
+
+  ;; Custom Functions
+  (defun open-hpc1-directory ()
+  "Open a remote directory in HPC 1 using Tramp."
+  (interactive)
+  (find-file "/sshx:hpc1:~/scratch/chithresh/Calculations"))
+
+  (defun open-hpc2-directory ()
+  "Open a remote directory in HPC 2 using Tramp."
+  (interactive)
+  (find-file "/sshx:hpc2:~/Calculations"))
+
+  ;; Assigning Keybindings to the above Functions
+  (global-set-key (kbd "C-c r 1") 'open-hpc1-directory)
+  (global-set-key (kbd "C-c r 2") 'open-hpc2-directory)
+#+end_src
+
+** Magit
+#+begin_src emacs-lisp
+  ;; Requirement to Install Magit
+  (use-package transient)
+  ;; Install Magit
+  (use-package magit)
 #+end_src
 
 ** Which Key
@@ -185,6 +208,13 @@ Blinking the Modeline instead of Visual Bell
 #+begin_src emacs-lisp
   (setq org-latex-src-block-backend 'engraved)     ; Set src block formatting backend to Engraved
   ;;(setq org-latex-engraved-theme 'doom-one-light)  ; Set doom-one-light theme for Latex Code Block Export
+#+end_src
+
+* Vasp
+Some useful stuff for Vasp
+#+begin_src emacs-lisp
+  ;; Basic Syntax Highlighting for Vasp Input Files
+  (add-to-list 'auto-mode-alist '("INCAR.*\\'" . conf-mode))
 #+end_src
 
 * Keybindings
