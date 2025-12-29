@@ -1,31 +1,37 @@
-#+TITLE: Chithresh's Emacs Config
+#+TITLE: CEmacs
 #+AUTHOR: Chithresh
 #+STARTUP: content
 
-* UI Tweaks
-** Decluttering the UI
+* UI
+** Disabling Some UI Elements
 #+begin_src emacs-lisp
-  (setq inhibit-startup-message t            ; Don't show the splash screen
-        use-short-answers t                  ; Use y or n instead of yes or no
-        visible-bell t)                      ; Flash Screen instead of Audible Bell
+  (menu-bar-mode -1)              ; Hide menubar
+  (tool-bar-mode -1)              ; Hide toolbar
+  (scroll-bar-mode -1)            ; Hide scrollbar
+  (setq inhibit-splash-screen t)  ; Don't show the splash screen
+#+end_src
 
-  (menu-bar-mode -1)                         ; Hide Menu Bar
-  (tool-bar-mode -1)                         ; Hide Tool Bar
-  (scroll-bar-mode -1)                       ; Hide Scroll Bar
-  (fringe-mode 10)                           ; Add some Space to the Left & Right Border
-  (setq display-line-numbers-width 4)        ; Set the width for line numbers
-  (setq display-line-numbers-width-start t)  ; Ensure it adjusts only once at startup
+** UI Tweaks
+#+begin_src emacs-lisp
+  (fringe-mode 10)                 ; Add some space to the left & right border
+  (pixel-scroll-precision-mode 1)  ; Enable smooth scrolling
+  (setq use-short-answers t)       ; Use y or n instead of yes or no
 #+end_src
 
 ** Line & Column Numbers
 #+begin_src emacs-lisp
-  (global-display-line-numbers-mode 1)        ; Enable Line Numbers
-  (setq display-line-numbers-type 'relative)  ; Relative Line Numbers (or Visual)
-  (setq column-number-mode t)                 ; Set Column Numbers
+  (global-display-line-numbers-mode 1)       ; Enable line numbers
+  (global-visual-line-mode t)                ; Enable visual line mode globally
+  ;; Set symbols for line wrap
+  (setq visual-line-fringe-indicators '(left-curly-arrow right-curly-arrow))
+  (setq display-line-numbers-type 'visual    ; Relative line numbers (or relative)
+        display-line-numbers-width 4         ; Set the width for line numbers display
+        display-line-numbers-width-start t   ; Ensure it adjusts only once at startup
+        column-number-mode t)                ; Set column numbers
 #+end_src
 
-* Package Manager Setup
-** Elpaca
+* Elpaca
+** Bootstrap
 #+begin_src emacs-lisp
   (defvar elpaca-installer-version 0.11)
   (defvar elpaca-directory (expand-file-name "elpaca/" user-emacs-directory))
@@ -67,48 +73,128 @@
   (elpaca `(,@elpaca-order))
 #+end_src
 
-** Use-Package Support for Elpaca
+** Use-Package Support
 #+begin_src emacs-lisp
-  ;; Install use-package support
+  ;; Install use-package support for Elpaca
   (elpaca elpaca-use-package
     ;; Enable use-package :ensure support for Elpaca.
     (elpaca-use-package-mode))
 
-  ;; Install all Packages instead of :ensure t for Every Package
-  ;; Specifiy :ensure nil for Packages which should not be Installed Automatically (or for Built-in Packages)
+  ;; Install all packages instead of :ensure t for every package
+  ;; Specifiy :ensure nil for packages which should not be installed automatically (or for built-in packages)
   (setq use-package-always-ensure t)
 #+end_src
 
-* Modus Theme
+* Theme & Fonts
 #+begin_src emacs-lisp
-  (setq modus-themes-mode-line '(accented borderless)
+  ;; Modus theme config
+  (setq modus-themes-italic-constructs t
         modus-themes-bold-constructs t
-        modus-themes-italic-constructs t
-        modus-themes-fringes 'subtle
-        modus-themes-tabs-accented t
-        modus-themes-paren-match '(bold intense)
-        modus-themes-prompts '(bold intense)
-        modus-themes-org-blocks 'tinted-background
-        modus-themes-scale-headings t
-        modus-themes-region '(bg-only))
+        modus-themes-mixed-fonts t
+        modus-themes-headings '((1 . (1.5))
+                                (2 . (1.3))
+                                (t . (1.1))))
 
   ;; Load the dark theme by default
   (load-theme 'modus-vivendi-tinted t)
+
+  ;; Set default, fixed and variable pitch fonts
+  (use-package mixed-pitch
+    :hook
+    (text-mode . mixed-pitch-mode))
 #+end_src
 
-* Packages and Config
+* Emacs Defaults
+Changing some bad defaults
+#+begin_src emacs-lisp
+  (use-package emacs
+    :demand t
+    :ensure nil
+    :init
+    ;; More than one minibuffer
+    (setq enable-recursive-minibuffers t)
+
+    ;; Copy instead of moving for backups
+    (setq backup-by-copying t)
+
+    ;; Don't consider double space as sentence end
+    (setq sentence-end-double-space nil)
+
+    ;; Don't resize the fame after its contents change
+    (setq frame-inhibit-implied-resize t)
+
+    ;; setq-default sets the buffer local variables value in all buffers
+    ;; Use spaces instead of tabs
+    (setq-default indent-tabs-mode nil)
+
+    ;; Escape quits everything
+    (global-set-key (kbd "<escape>") 'keyboard-escape-quit)
+
+    (setq delete-by-moving-to-trash t)
+
+    ;; Highlights matching parentheses
+    (show-paren-mode t))
+#+end_src
+
+* Electric
+#+begin_src emacs-lisp
+  (use-package electric
+    :demand t
+    :ensure nil
+    :init
+    ;; Automatically insert closing parens
+    (electric-pair-mode +1)
+    ;; More annoying than useful
+    (setq electric-pair-preserve-balance nil))
+#+end_src
+
+* Ediff
+#+begin_src emacs-lisp
+  (use-package ediff
+    :demand t
+    :ensure nil
+  )
+#+end_src
+
+* Evil
 ** Evil Mode
 #+begin_src emacs-lisp
   (use-package evil
     :demand t
     :init
+    ;; J & K respects wrapped lines
+    (setq evil-respect-visual-line-mode t)
+
+    ;; Use emacs' built-in search functionality.
+    (setq evil-search-module 'isearch)
+
+    ;; Allow scroll up with 'C-u'
+    (setq evil-want-C-u-scroll t)
+
+    ;; Allow scroll down with 'C-d'
+    (setq evil-want-C-d-scroll t)
+
+    ;; Necessary for evil collection
     (setq evil-want-integration t)
     (setq evil-want-keybinding nil)
+
+    ;; Making sure that the tab key is bound for 'org-cycle'
+    ;; This is to fix the 'TAB' key in some cases (like in terminal version)
+    ;; (setq evil-want-C-i-jump nil)
+
+    ;; 'u' for undo and 'C-r' for redo
     (setq evil-undo-system 'undo-redo)
+
+    ;; Conditions for splitting windows
     (setq evil-vsplit-window-right t)
     (setq evil-split-window-below t)
+
     :config
-    (evil-mode 1))
+    ;; Enable evil mode globally
+    (evil-mode t)
+
+    ;; Set the initial state for some kinds of buffers.
+    (evil-set-initial-state 'messages-buffer-mode 'normal))
 #+end_src
 
 ** Evil Collection
@@ -116,11 +202,97 @@
   (use-package evil-collection
     :after evil
     :custom
-    (evil-collection-setup-minibuffer t)  ; Enable Evil Mode in MiniBuffer
+    ;; Enable evil mode in minibuffer
+    (evil-collection-setup-minibuffer t)
     :config
     (evil-collection-init))
 #+end_src
 
+** Evil Commentary
+Make it easy to comment out (lines of) code in evil mode
+#+begin_src emacs-lisp
+  (use-package evil-commentary
+    :after evil
+    :config
+    ;; Globally enable evil-commentary
+    (evil-commentary-mode))
+#+end_src
+
+** Evil Surround
+#+begin_src emacs-lisp
+  (use-package evil-surround
+    :after evil
+    :config
+    ;; Globally enable evil-surround
+    (global-evil-surround-mode 1))
+#+end_src
+
+** Evil Goggles
+Show visual hints for evil motions
+#+begin_src emacs-lisp
+  (use-package evil-goggles
+    :config
+    (evil-goggles-mode)
+
+    ;; optionally use diff-mode's faces; as a result, deleted text
+    ;; will be highlighed with `diff-removed` face which is typically
+    ;; some red color (as defined by the color theme)
+    ;; other faces such as `diff-added` will be used for other actions
+    (evil-goggles-use-diff-faces))
+#+end_src
+
+* General
+#+begin_src emacs-lisp
+  (use-package general
+    :ensure (:wait t)
+    :demand t
+    :config
+    ;; Integrate general with evil
+    (general-evil-setup)
+
+    ;; Set up 'SPC' as the global leader key
+    (general-create-definer chithresh/leader-keys
+      :states '(normal insert visual emacs)
+      :keymaps 'override
+      :prefix "SPC"
+      ;; Leader in insert mode
+      :global-prefix "M-SPC")
+
+    ;; Setting the keybindings
+    ;; Single keybinds
+    (chithresh/leader-keys
+      ;; An alternative to 'M-x'
+      "SPC" '(execute-extended-command :wk "Execute Command")
+      ;; Open dired
+      "." '(dired-jump :wk "Open Dired")
+      ;; Quit emacs
+      "q" '(evil-quit :wk "Quit")
+      ;; Window movement
+      "k" '(windmove-up :wk "Window Up")
+      "j" '(windmove-down :wk "Window Down")
+      "h" '(windmove-left :wk "Window Left")
+      "l" '(windmove-right :wk "Window Right"))
+
+    ;; Keychords
+    ;; For file operations
+    (chithresh/leader-keys
+      "f" '(:ignore t :wk "File")
+      "f f" '(find-file :wk "Find File")
+      "f c" '((lambda() (interactive)(find-file "~/.config/emacs/README.org")) :wk "Emacs Config")
+      "f s" '(evil-write :wk "Save"))
+
+    ;; For buffers
+    (chithresh/leader-keys
+      "b" '(:ignore t :wk "Buffer")
+      "b b" '(switch-to-buffer :wk "Switch Buffer")
+      "b k" '(kill-buffer :wk "Kill Buffer")
+      "b i" '(ibuffer :wk "IBuffer")
+      "b n" '(next-buffer :wk "Next Buffer")
+      "b p" '(previous-buffer :wk "Previous Buffer")
+      "b r" '(revert-buffer :wk "Reload Buffer")))
+#+end_src
+
+* Packages and Config
 ** Dired
 #+begin_src emacs-lisp
   (use-package dired
@@ -142,13 +314,14 @@ Config for M-x Shell
 
 ** Tramp
 #+begin_src emacs-lisp
+  ;; Setup bash as default shell for all tramp connections
   (connection-local-set-profile-variables 'remote-bash
      '((shell-file-name . "/usr/bin/bash")
        (shell-command-switch . "-lc")  ; -l is required to load ENV variables & PATH
        (shell-interactive-switch . "-i")
        (shell-login-switch . "-l")))
   (connection-local-set-profiles
-     '(:application tramp) 'remote-bash) ; set bash as default shell for all tramp connections
+     '(:application tramp) 'remote-bash)
 
   ;; Custom Functions
   (defun open-hpc1-directory ()
@@ -162,8 +335,10 @@ Config for M-x Shell
   (find-file "/sshx:hpc2:~/Calculations"))
 
   ;; Assigning Keybindings to the above Functions
-  (global-set-key (kbd "C-c r 1") 'open-hpc1-directory)
-  (global-set-key (kbd "C-c r 2") 'open-hpc2-directory)
+  (chithresh/leader-keys
+    "r" '(:ignore t :wk "Remote")
+    "r 1" '(open-hpc1-directory :wk "Connect to HPC1")
+    "r 2" '(open-hpc2-directory :wk "Connect to HPC2"))
 #+end_src
 
 ** Magit
@@ -213,21 +388,10 @@ Blinking the Modeline instead of Visual Bell
 * Vasp
 Some useful stuff for Vasp
 #+begin_src emacs-lisp
-  ;; Basic Syntax Highlighting for Vasp Input Files
+  ;; Basic syntax highlighting for vasp input files
   (add-to-list 'auto-mode-alist '("INCAR.*\\'" . conf-mode))
 #+end_src
 
 * Keybindings
-** Window Management
 #+begin_src emacs-lisp
-  ;; Window Management
-  ;; (global-set-key (kbd "<C-up>") 'shrink-window)
-  ;; (global-set-key (kbd "<C-down>") 'enlarge-window)
-  ;; (global-set-key (kbd "<C-left>") 'shrink-window-horizontally)
-  ;; (global-set-key (kbd "<C-right>") 'enlarge-window-horizontally)
-#+end_src
-
-** Global Keybinds
-#+begin_src emacs-lisp
-  (global-set-key (kbd "<escape>") 'keyboard-escape-quit)  ; ESC quits Prompts (Partially Works)
 #+end_src
