@@ -1,5 +1,4 @@
 #+TITLE: CEmacs
-#+SUBTITLE: Chithresh's Emacs Config
 #+AUTHOR: Chithresh
 #+STARTUP: content
 
