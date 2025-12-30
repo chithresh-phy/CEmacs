@@ -290,7 +290,9 @@ Show visual hints for evil motions
       "k" '(windmove-up :wk "Window Up")
       "j" '(windmove-down :wk "Window Down")
       "h" '(windmove-left :wk "Window Left")
-      "l" '(windmove-right :wk "Window Right"))
+      "l" '(windmove-right :wk "Window Right")
+      ;; Magit status
+      "g" '(magit-status :wk "Magit Status"))
 
     ;; Keychords
     ;; For file operations
