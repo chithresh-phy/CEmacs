@@ -25,7 +25,7 @@
   ;; Set symbols for line wrap
   (setq visual-line-fringe-indicators '(left-curly-arrow right-curly-arrow))
   (setq display-line-numbers-type 'visual    ; Relative line numbers (or relative)
-        display-line-numbers-width 4         ; Set the width for line numbers display
+        display-line-numbers-width 5         ; Set the width for line numbers display
         display-line-numbers-width-start t   ; Ensure it adjusts only once at startup
         column-number-mode t)                ; Set column numbers
 #+end_src
@@ -102,6 +102,25 @@
   (use-package mixed-pitch
     :hook
     (text-mode . mixed-pitch-mode))
+#+end_src
+
+* Icons
+#+begin_src emacs-lisp
+  (use-package all-the-icons
+    :if (display-graphic-p)
+    :demand t)
+
+  ;; Use icons in dired
+  (use-package all-the-icons-dired
+    :demand t
+    :hook
+    (dired-mode . all-the-icons-dired-mode))
+
+  (use-package all-the-icons-completion
+    :after (marginalia all-the-icons)
+    :demand t
+    :hook (marginalia-mode . all-the-icons-completion-marginalia-setup)
+    :init (all-the-icons-completion-mode))
 #+end_src
 
 * Emacs Defaults
@@ -279,7 +298,8 @@ Show visual hints for evil motions
       "f" '(:ignore t :wk "File")
       "f f" '(find-file :wk "Find File")
       "f c" '((lambda() (interactive)(find-file "~/.config/emacs/README.org")) :wk "Emacs Config")
-      "f s" '(evil-write :wk "Save"))
+      "f s" '(evil-write :wk "Save")
+      "f r" '(recentf-open :wk "Open Recent Files"))
 
     ;; For buffers
     (chithresh/leader-keys
@@ -290,6 +310,45 @@ Show visual hints for evil motions
       "b n" '(next-buffer :wk "Next Buffer")
       "b p" '(previous-buffer :wk "Previous Buffer")
       "b r" '(revert-buffer :wk "Reload Buffer")))
+#+end_src
+
+* Minibuffer
+** Vertico
+Minibuffer Completions (Vertical)
+#+begin_src emacs-lisp
+  (use-package vertico
+    :init
+    (vertico-mode)
+    :custom
+    (vertico-sort-function 'vertico-sort-history-alpha))
+#+end_src
+
+** SaveHist
+Persist history over Emacs restarts
+#+begin_src emacs-lisp
+  (use-package savehist
+    :ensure nil
+    :init
+    (savehist-mode))
+#+end_src
+
+** Orderless
+Matches patterns, irrespective of the order they are typed in
+#+begin_src emacs-lisp
+  (use-package orderless
+     :custom
+     (completion-styles '(orderless basic))
+     (completion-category-defaults nil)
+     (completion-category-overrides
+      '((file (styles partial-completion)))))
+#+end_src
+
+** Marginalia
+Displays the documentation next to your completion candidates
+#+begin_src emacs-lisp
+  (use-package marginalia
+      :init
+      (marginalia-mode))
 #+end_src
 
 * Packages and Config
