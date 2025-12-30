@@ -290,9 +290,7 @@ Show visual hints for evil motions
       "k" '(windmove-up :wk "Window Up")
       "j" '(windmove-down :wk "Window Down")
       "h" '(windmove-left :wk "Window Left")
-      "l" '(windmove-right :wk "Window Right")
-      ;; Magit status
-      "g" '(magit-status :wk "Magit Status"))
+      "l" '(windmove-right :wk "Window Right"))
 
     ;; Keychords
     ;; For file operations
@@ -407,7 +405,11 @@ Config for M-x Shell
   ;; Requirement to Install Magit
   (use-package transient)
   ;; Install Magit
-  (use-package magit)
+  (use-package magit
+    :config
+    (chithresh/leader-keys
+      "g" '(:ignore t :wk "Magit")
+      "g s" '(magit-status :wk "Status")))
 #+end_src
 
 ** Which Key
