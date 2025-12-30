@@ -124,7 +124,8 @@
     :init (all-the-icons-completion-mode))
 #+end_src
 
-* Emacs Defaults
+* Packages Config
+** Emacs
 Changing some bad defaults
 #+begin_src emacs-lisp
   (use-package emacs
@@ -156,8 +157,8 @@ Changing some bad defaults
     (show-paren-mode t))
 #+end_src
 
-* Evil
-** Evil Mode
+** Evil
+*** Evil Mode
 #+begin_src emacs-lisp
   (use-package evil
     :demand t
@@ -197,7 +198,7 @@ Changing some bad defaults
     (evil-set-initial-state 'messages-buffer-mode 'normal))
 #+end_src
 
-** Evil Collection
+*** Evil Collection
 #+begin_src emacs-lisp
   (use-package evil-collection
     :after evil
@@ -208,7 +209,7 @@ Changing some bad defaults
     (evil-collection-init))
 #+end_src
 
-** Evil Commentary
+*** Evil Commentary
 Make it easy to comment out (lines of) code in evil mode
 #+begin_src emacs-lisp
   (use-package evil-commentary
@@ -218,7 +219,7 @@ Make it easy to comment out (lines of) code in evil mode
     (evil-commentary-mode))
 #+end_src
 
-** Evil Surround
+*** Evil Surround
 #+begin_src emacs-lisp
   (use-package evil-surround
     :after evil
@@ -227,7 +228,7 @@ Make it easy to comment out (lines of) code in evil mode
     (global-evil-surround-mode 1))
 #+end_src
 
-** Evil Goggles
+*** Evil Goggles
 Show visual hints for evil motions
 #+begin_src emacs-lisp
   (use-package evil-goggles
@@ -241,7 +242,7 @@ Show visual hints for evil motions
     (evil-goggles-use-diff-faces))
 #+end_src
 
-* General
+** General
 #+begin_src emacs-lisp
   (use-package general
     :ensure (:wait t)
@@ -295,8 +296,8 @@ Show visual hints for evil motions
       "b r" '(revert-buffer :wk "Reload Buffer")))
 #+end_src
 
-* Minibuffer
-** Vertico
+** Minibuffer
+*** Vertico
 Minibuffer Completions (Vertical)
 #+begin_src emacs-lisp
   (use-package vertico
@@ -306,7 +307,7 @@ Minibuffer Completions (Vertical)
     (vertico-sort-function 'vertico-sort-history-alpha))
 #+end_src
 
-** SaveHist
+*** SaveHist
 Persist history over Emacs restarts
 #+begin_src emacs-lisp
   (use-package savehist
@@ -315,7 +316,7 @@ Persist history over Emacs restarts
     (savehist-mode))
 #+end_src
 
-** Orderless
+*** Orderless
 Matches patterns, irrespective of the order they are typed in
 #+begin_src emacs-lisp
   (use-package orderless
@@ -326,7 +327,7 @@ Matches patterns, irrespective of the order they are typed in
       '((file (styles partial-completion)))))
 #+end_src
 
-** Marginalia
+*** Marginalia
 Displays the documentation next to your completion candidates
 #+begin_src emacs-lisp
   (use-package marginalia
@@ -334,7 +335,7 @@ Displays the documentation next to your completion candidates
       (marginalia-mode))
 #+end_src
 
-* Dired
+** Dired
 #+begin_src emacs-lisp
   (use-package dired
     :ensure nil  ; Built-in
@@ -346,14 +347,14 @@ Displays the documentation next to your completion candidates
       (setq dired-kill-when-opening-new-dired-buffer t)  ; Open all Directories in the Same Dired Buffer
 #+end_src
 
-* SHELL
+** SHELL
 Config for M-x Shell
 #+begin_src emacs-lisp
   (setq explicit-shell-file-name "/usr/bin/bash")
   (setq comint-prompt-read-only t)  ; Make Shell Prompt Read Only
 #+end_src
 
-* Tramp
+** Tramp
 #+begin_src emacs-lisp
   ;; Setup bash as default shell for all tramp connections
   (connection-local-set-profile-variables 'remote-bash
@@ -382,7 +383,7 @@ Config for M-x Shell
     "r 2" '(open-hpc2-directory :wk "Connect to HPC2"))
 #+end_src
 
-* Magit
+** Magit
 #+begin_src emacs-lisp
   ;; Requirement to install Magit
   (use-package transient)
@@ -390,7 +391,7 @@ Config for M-x Shell
   (use-package magit)
 #+end_src
 
-* Which Key
+** Which Key
 #+begin_src emacs-lisp
   (use-package which-key
     :ensure nil  ; Built-in
@@ -398,8 +399,8 @@ Config for M-x Shell
     (which-key-mode))
 #+end_src
 
-* Other Packages
-** Electric
+** Other
+*** Electric
 #+begin_src emacs-lisp
   (use-package electric
     :demand t
@@ -411,7 +412,7 @@ Config for M-x Shell
     (setq electric-pair-preserve-balance nil))
 #+end_src
 
-** Ediff
+*** Ediff
 #+begin_src emacs-lisp
   (use-package ediff
     :demand t
@@ -419,13 +420,13 @@ Config for M-x Shell
   )
 #+end_src
 
-** Engraved Faces
+*** Engraved Faces
 For properly formatting code blocks in org-mode latex export
 #+begin_src emacs-lisp
   (use-package engrave-faces)
 #+end_src
 
-** Modeline Bell
+*** Modeline Bell
 Blinking the Modeline instead of Visual Bell
 #+begin_src emacs-lisp
   (use-package mode-line-bell
