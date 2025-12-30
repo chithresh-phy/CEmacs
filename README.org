@@ -85,7 +85,8 @@
   (setq use-package-always-ensure t)
 #+end_src
 
-* Theme & Fonts
+* Look & Feel
+** Theme & Fonts
 #+begin_src emacs-lisp
   ;; Modus theme config
   (setq modus-themes-italic-constructs t
@@ -104,7 +105,7 @@
     (text-mode . mixed-pitch-mode))
 #+end_src
 
-* Icons
+** Icons
 #+begin_src emacs-lisp
   (use-package all-the-icons
     :if (display-graphic-p)
@@ -153,26 +154,6 @@ Changing some bad defaults
 
     ;; Highlights matching parentheses
     (show-paren-mode t))
-#+end_src
-
-* Electric
-#+begin_src emacs-lisp
-  (use-package electric
-    :demand t
-    :ensure nil
-    :init
-    ;; Automatically insert closing parens
-    (electric-pair-mode +1)
-    ;; More annoying than useful
-    (setq electric-pair-preserve-balance nil))
-#+end_src
-
-* Ediff
-#+begin_src emacs-lisp
-  (use-package ediff
-    :demand t
-    :ensure nil
-  )
 #+end_src
 
 * Evil
@@ -290,7 +271,9 @@ Show visual hints for evil motions
       "k" '(windmove-up :wk "Window Up")
       "j" '(windmove-down :wk "Window Down")
       "h" '(windmove-left :wk "Window Left")
-      "l" '(windmove-right :wk "Window Right"))
+      "l" '(windmove-right :wk "Window Right")
+      ;; Magit
+      "g" '(magit-status :wk "Magit"))
 
     ;; Keychords
     ;; For file operations
@@ -351,8 +334,7 @@ Displays the documentation next to your completion candidates
       (marginalia-mode))
 #+end_src
 
-* Packages and Config
-** Dired
+* Dired
 #+begin_src emacs-lisp
   (use-package dired
     :ensure nil  ; Built-in
@@ -364,14 +346,14 @@ Displays the documentation next to your completion candidates
       (setq dired-kill-when-opening-new-dired-buffer t)  ; Open all Directories in the Same Dired Buffer
 #+end_src
 
-** SHELL
+* SHELL
 Config for M-x Shell
 #+begin_src emacs-lisp
   (setq explicit-shell-file-name "/usr/bin/bash")
   (setq comint-prompt-read-only t)  ; Make Shell Prompt Read Only
 #+end_src
 
-** Tramp
+* Tramp
 #+begin_src emacs-lisp
   ;; Setup bash as default shell for all tramp connections
   (connection-local-set-profile-variables 'remote-bash
@@ -400,24 +382,41 @@ Config for M-x Shell
     "r 2" '(open-hpc2-directory :wk "Connect to HPC2"))
 #+end_src
 
-** Magit
+* Magit
 #+begin_src emacs-lisp
-  ;; Requirement to Install Magit
+  ;; Requirement to install Magit
   (use-package transient)
   ;; Install Magit
-  (use-package magit
-    :config
-    (chithresh/leader-keys
-      "g" '(:ignore t :wk "Magit")
-      "g s" '(magit-status :wk "Status")))
+  (use-package magit)
 #+end_src
 
-** Which Key
+* Which Key
 #+begin_src emacs-lisp
   (use-package which-key
     :ensure nil  ; Built-in
     :config
     (which-key-mode))
+#+end_src
+
+* Other Packages
+** Electric
+#+begin_src emacs-lisp
+  (use-package electric
+    :demand t
+    :ensure nil
+    :init
+    ;; Automatically insert closing parens
+    (electric-pair-mode +1)
+    ;; More annoying than useful
+    (setq electric-pair-preserve-balance nil))
+#+end_src
+
+** Ediff
+#+begin_src emacs-lisp
+  (use-package ediff
+    :demand t
+    :ensure nil
+  )
 #+end_src
 
 ** Engraved Faces
@@ -434,12 +433,16 @@ Blinking the Modeline instead of Visual Bell
     (mode-line-bell-mode t))
 #+end_src
 
-* Org Mode
+* Org
 ** Org Babel
 #+begin_src emacs-lisp
   (org-babel-do-load-languages
     'org-babel-load-languages
-    '((python . t)))
+    '((python . t)
+      (shell . t)
+      (gnuplot . t)
+      (latex . t)
+      (emacs-lisp . t)))
 #+end_src
 
 ** Org Latex
@@ -457,4 +460,5 @@ Some useful stuff for Vasp
 
 * Keybindings
 #+begin_src emacs-lisp
+  ;; Other Keybinds or Keybind overrides
 #+end_src
