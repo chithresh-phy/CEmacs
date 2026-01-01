@@ -2,34 +2,6 @@
 #+AUTHOR: Chithresh
 #+STARTUP: content
 
-* UI
-** Disabling Some UI Elements
-#+begin_src emacs-lisp
-  (menu-bar-mode -1)              ; Hide menubar
-  (tool-bar-mode -1)              ; Hide toolbar
-  (scroll-bar-mode -1)            ; Hide scrollbar
-  (setq inhibit-splash-screen t)  ; Don't show the splash screen
-#+end_src
-
-** UI Tweaks
-#+begin_src emacs-lisp
-  (fringe-mode 10)                 ; Add some space to the left & right border
-  (pixel-scroll-precision-mode 1)  ; Enable smooth scrolling
-  (setq use-short-answers t)       ; Use y or n instead of yes or no
-#+end_src
-
-** Line & Column Numbers
-#+begin_src emacs-lisp
-  (global-display-line-numbers-mode 1)       ; Enable line numbers
-  (global-visual-line-mode t)                ; Enable visual line mode globally
-  ;; Set symbols for line wrap
-  (setq visual-line-fringe-indicators '(left-curly-arrow right-curly-arrow))
-  (setq display-line-numbers-type 'visual    ; Relative line numbers (or relative)
-        display-line-numbers-width 5         ; Set the width for line numbers display
-        display-line-numbers-width-start t   ; Ensure it adjusts only once at startup
-        column-number-mode t)                ; Set column numbers
-#+end_src
-
 * Elpaca
 ** Bootstrap
 #+begin_src emacs-lisp
@@ -74,21 +46,30 @@
 #+end_src
 
 ** Use-Package Support
+Install use-package support for elpaca
 #+begin_src emacs-lisp
-  ;; Install use-package support for Elpaca
   (elpaca elpaca-use-package
-    ;; Enable use-package :ensure support for Elpaca.
     (elpaca-use-package-mode))
 
-  ;; Install all packages instead of :ensure t for every package
-  ;; Specifiy :ensure nil for packages which should not be installed automatically (or for built-in packages)
+  ;; Install all packages  by default, instead of :ensure t for every package
+  ;; Specifiy :ensure nil for packages which should not be installed automatically (i.e. for built-in packages)
   (setq use-package-always-ensure t)
 #+end_src
 
-* Look & Feel
-** Theme & Fonts
+* No Littering
+Cleanup emacs config directory
 #+begin_src emacs-lisp
-  ;; Modus theme config
+  (use-package no-littering
+    :custom
+    (custom-file (no-littering-expand-etc-file-name "custom.el"))
+    :config
+    (no-littering-theme-backups))
+#+end_src
+
+* Appearance
+** Theme
+Modus theme config
+#+begin_src emacs-lisp
   (setq modus-themes-italic-constructs t
         modus-themes-bold-constructs t
         modus-themes-mixed-fonts t
@@ -98,11 +79,18 @@
 
   ;; Load the dark theme by default
   (load-theme 'modus-vivendi-tinted t)
+#+end_src
 
+** Fonts
+#+begin_src emacs-lisp
   ;; Set default, fixed and variable pitch fonts
   (use-package mixed-pitch
     :hook
     (text-mode . mixed-pitch-mode))
+
+  (set-face-attribute 'default nil :font "Iosevka Fixed Extended-11")
+  (set-face-attribute 'fixed-pitch nil :font "Iosevka Fixed Extended-11")
+  (set-face-attribute 'variable-pitch nil :font "Iosevka Aile")
 #+end_src
 
 ** Icons
@@ -124,6 +112,18 @@
     :init (all-the-icons-completion-mode))
 #+end_src
 
+** Line & Column Numbers
+#+begin_src emacs-lisp
+  (global-display-line-numbers-mode 1)       ; Enable line numbers
+  (global-visual-line-mode t)                ; Enable visual line mode globally
+  ;; Set symbols for line wrap
+  (setq visual-line-fringe-indicators '(left-curly-arrow right-curly-arrow))
+  (setq display-line-numbers-type 'visual    ; Visual line numbers (or relative)
+        display-line-numbers-width 5         ; Set the width for line numbers display
+        display-line-numbers-width-start t   ; Ensure the width adjusts only once at startup
+        column-number-mode t)                ; Set column numbers
+#+end_src
+
 * Packages Config
 ** Emacs
 Changing some bad defaults
@@ -134,6 +134,9 @@ Changing some bad defaults
     :init
     ;; More than one minibuffer
     (setq enable-recursive-minibuffers t)
+
+    ;; Use y or n instead of yes or no
+    (setq use-short-answers t)
 
     ;; Copy instead of moving for backups
     (setq backup-by-copying t)
@@ -257,53 +260,27 @@ Show visual hints for evil motions
       :keymaps 'override
       :prefix "SPC"
       ;; Leader in insert mode
-      :global-prefix "M-SPC")
+      :global-prefix "M-SPC"))
+#+end_src
 
-    ;; Setting the keybindings
-    ;; Single keybinds
-    (chithresh/leader-keys
-      ;; An alternative to 'M-x'
-      "SPC" '(execute-extended-command :wk "Execute Command")
-      ;; Open dired
-      "." '(dired-jump :wk "Open Dired")
-      ;; Quit emacs
-      "q" '(evil-quit :wk "Quit")
-      ;; Window movement
-      "k" '(windmove-up :wk "Window Up")
-      "j" '(windmove-down :wk "Window Down")
-      "h" '(windmove-left :wk "Window Left")
-      "l" '(windmove-right :wk "Window Right")
-      ;; Magit
-      "g" '(magit-status :wk "Magit"))
-
-    ;; Keychords
-    ;; For file operations
-    (chithresh/leader-keys
-      "f" '(:ignore t :wk "File")
-      "f f" '(find-file :wk "Find File")
-      "f c" '((lambda() (interactive)(find-file "~/.config/emacs/README.org")) :wk "Emacs Config")
-      "f s" '(evil-write :wk "Save")
-      "f r" '(recentf-open :wk "Open Recent Files"))
-
-    ;; For buffers
-    (chithresh/leader-keys
-      "b" '(:ignore t :wk "Buffer")
-      "b b" '(switch-to-buffer :wk "Switch Buffer")
-      "b k" '(kill-buffer :wk "Kill Buffer")
-      "b i" '(ibuffer :wk "IBuffer")
-      "b n" '(next-buffer :wk "Next Buffer")
-      "b p" '(previous-buffer :wk "Previous Buffer")
-      "b r" '(revert-buffer :wk "Reload Buffer")))
+** Modeline
+*** Minions
+#+begin_src emacs-lisp
+  (use-package minions
+    :ensure t
+    :config
+    (minions-mode 1))
 #+end_src
 
 ** Minibuffer
 *** Vertico
-Minibuffer Completions (Vertical)
+Minibuffer completions (vertical)
 #+begin_src emacs-lisp
   (use-package vertico
     :init
     (vertico-mode)
     :custom
+    (vertico-cycle t)
     (vertico-sort-function 'vertico-sort-history-alpha))
 #+end_src
 
@@ -328,7 +305,7 @@ Matches patterns, irrespective of the order they are typed in
 #+end_src
 
 *** Marginalia
-Displays the documentation next to your completion candidates
+Displays the documentation next to the completion candidates
 #+begin_src emacs-lisp
   (use-package marginalia
       :init
@@ -347,7 +324,7 @@ Displays the documentation next to your completion candidates
       (setq dired-kill-when-opening-new-dired-buffer t)  ; Open all Directories in the Same Dired Buffer
 #+end_src
 
-** SHELL
+** Shell
 Config for M-x Shell
 #+begin_src emacs-lisp
   (setq explicit-shell-file-name "/usr/bin/bash")
@@ -364,23 +341,6 @@ Config for M-x Shell
        (shell-login-switch . "-l")))
   (connection-local-set-profiles
      '(:application tramp) 'remote-bash)
-
-  ;; Custom Functions
-  (defun open-hpc1-directory ()
-  "Open a remote directory in HPC 1 using Tramp."
-  (interactive)
-  (find-file "/sshx:hpc1:~/scratch/chithresh/Calculations"))
-
-  (defun open-hpc2-directory ()
-  "Open a remote directory in HPC 2 using Tramp."
-  (interactive)
-  (find-file "/sshx:hpc2:~/Calculations"))
-
-  ;; Assigning Keybindings to the above Functions
-  (chithresh/leader-keys
-    "r" '(:ignore t :wk "Remote")
-    "r 1" '(open-hpc1-directory :wk "Connect to HPC1")
-    "r 2" '(open-hpc2-directory :wk "Connect to HPC2"))
 #+end_src
 
 ** Magit
@@ -427,7 +387,7 @@ For properly formatting code blocks in org-mode latex export
 #+end_src
 
 *** Modeline Bell
-Blinking the Modeline instead of Visual Bell
+Blinking the modeline instead of visual bell
 #+begin_src emacs-lisp
   (use-package mode-line-bell
     :custom
@@ -435,7 +395,7 @@ Blinking the Modeline instead of Visual Bell
 #+end_src
 
 * Org
-** Org Babel
+** Babel
 #+begin_src emacs-lisp
   (org-babel-do-load-languages
     'org-babel-load-languages
@@ -446,20 +406,87 @@ Blinking the Modeline instead of Visual Bell
       (emacs-lisp . t)))
 #+end_src
 
-** Org Latex
+** Latex Export
 #+begin_src emacs-lisp
   (setq org-latex-src-block-backend 'engraved)     ; Set src block formatting backend to Engraved
   ;;(setq org-latex-engraved-theme 'doom-one-light)  ; Set doom-one-light theme for Latex Code Block Export
 #+end_src
 
-* Vasp
+* Research Tools
+** Vasp
 Some useful stuff for Vasp
 #+begin_src emacs-lisp
   ;; Basic syntax highlighting for vasp input files
   (add-to-list 'auto-mode-alist '("INCAR.*\\'" . conf-mode))
 #+end_src
 
-* Keybindings
+** HPC Connections
+Automating connections to HPC's
 #+begin_src emacs-lisp
-  ;; Other Keybinds or Keybind overrides
+  (defun open-hpc1-directory ()
+  "Open a remote directory in HPC 1 using Tramp."
+  (interactive)
+  (find-file "/sshx:hpc1:~/scratch/chithresh/Calculations"))
+
+  (defun open-hpc2-directory ()
+  "Open a remote directory in HPC 2 using Tramp."
+  (interactive)
+  (find-file "/sshx:hpc2:~/Calculations"))
+#+end_src
+
+* Keybindings
+** Overrides
+#+begin_src emacs-lisp
+  ;; x deletes char but does not copy it to clipboard
+  (define-key evil-normal-state-map "x" 'delete-char)
+#+end_src
+
+** General
+*** Single Keys
+#+begin_src emacs-lisp
+  (chithresh/leader-keys
+    ;; An alternative to 'M-x'
+    "SPC" '(execute-extended-command :wk "Execute Command")
+    ;; Open dired
+    "." '(dired-jump :wk "Open Dired")
+    ;; Quit emacs
+    "q" '(evil-quit :wk "Quit")
+    ;; Window movement
+    "k" '(windmove-up :wk "Window Up")
+    "j" '(windmove-down :wk "Window Down")
+    "h" '(windmove-left :wk "Window Left")
+    "l" '(windmove-right :wk "Window Right")
+    ;; Magit
+    "g" '(magit-status :wk "Magit"))
+#+end_src
+
+*** Files
+#+begin_src emacs-lisp
+  (chithresh/leader-keys
+    "f" '(:ignore t :wk "File")
+    "f f" '(find-file :wk "Find File")
+    "f c" '((lambda() (interactive)(find-file "~/.config/emacs/README.org")) :wk "Emacs Config")
+    "f s" '(evil-write :wk "Save")
+    "f r" '(recentf-open :wk "Open Recent Files"))
+#+end_src
+
+*** Buffers
+#+begin_src emacs-lisp
+  (chithresh/leader-keys
+    "b" '(:ignore t :wk "Buffer")
+    "b b" '(switch-to-buffer :wk "Switch Buffer")
+    "b k" '(kill-buffer :wk "Kill Buffer")
+    "b i" '(ibuffer :wk "IBuffer")
+    "b n" '(next-buffer :wk "Next Buffer")
+    "b p" '(previous-buffer :wk "Previous Buffer")
+    "b r" '(revert-buffer :wk "Reload Buffer"))
+#+end_src
+
+*** Remote
+#+begin_src emacs-lisp
+  (chithresh/leader-keys
+    "r" '(:ignore t :wk "Remote")
+    ;; Custom functions defined in HPC Connections section
+    "r 1" '(open-hpc1-directory :wk "Connect to HPC1")  
+    "r 2" '(open-hpc2-directory :wk "Connect to HPC2"))
 #+end_src
