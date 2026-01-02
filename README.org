@@ -395,7 +395,8 @@ Blinking the modeline instead of visual bell
 #+end_src
 
 * Org
-** Todo Keywords
+** Custom Options
+*** Todo Keywords
 Setting & customizing the todo keywords in orgmode
 #+begin_src emacs-lisp
   (setq org-todo-keywords
