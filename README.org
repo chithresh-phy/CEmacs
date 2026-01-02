@@ -395,6 +395,31 @@ Blinking the modeline instead of visual bell
 #+end_src
 
 * Org
+** Todo Keywords
+Setting & customizing the todo keywords in orgmode
+#+begin_src emacs-lisp
+  (setq org-todo-keywords
+        '((sequence "TODO" "NEXT" "IN-PROGRESS" "DONE")))
+
+  (setq org-todo-keyword-faces
+        '(("TODO" . (:foreground "dark red" :weight bold :slant italic))
+          ("NEXT" . (:foreground "orange red" :weight bold :slant italic))
+          ("IN-PROGRESS" . (:foreground "dodger blue" :weight bold :slant italic))
+          ("DONE" . (:foreground "green" :weight bold :slant italic))))
+#+end_src
+
+** Ox-Pandoc
+For file conversion using pandoc
+#+begin_src emacs-lisp
+  (use-package ox-pandoc)
+#+end_src
+
+** Tempo
+#+begin_src emacs-lisp
+  (use-package org-tempo
+    :ensure nil)
+#+end_src
+
 ** Babel
 #+begin_src emacs-lisp
   (org-babel-do-load-languages
@@ -480,6 +505,13 @@ Automating connections to HPC's
     "b n" '(next-buffer :wk "Next Buffer")
     "b p" '(previous-buffer :wk "Previous Buffer")
     "b r" '(revert-buffer :wk "Reload Buffer"))
+#+end_src
+
+*** Org
+#+begin_src emacs-lisp
+  (chithresh/leader-keys
+    "o" '(:ignore t :wk "Org")
+    "o t" '(org-toggle-checkbox :wk "Toggle Checkbox"))
 #+end_src
 
 *** Remote
