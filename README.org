@@ -415,12 +415,6 @@ For file conversion using pandoc
   (use-package ox-pandoc)
 #+end_src
 
-** Tempo
-#+begin_src emacs-lisp
-  (use-package org-tempo
-    :ensure nil)
-#+end_src
-
 ** Babel
 #+begin_src emacs-lisp
   (org-babel-do-load-languages
@@ -428,14 +422,15 @@ For file conversion using pandoc
     '((python . t)
       (shell . t)
       (gnuplot . t)
+      (fortran . t)
       (latex . t)
       (emacs-lisp . t)))
 #+end_src
 
 ** Latex Export
 #+begin_src emacs-lisp
-  (setq org-latex-src-block-backend 'engraved)     ; Set src block formatting backend to Engraved
-  ;;(setq org-latex-engraved-theme 'doom-one-light)  ; Set doom-one-light theme for Latex Code Block Export
+  (setq org-latex-src-block-backend 'engraved)            ; Set src block formatting backend to Engraved
+  (setq org-latex-engraved-theme 'modus-operandi-tinted)  ; Set doom-one-light theme for Latex Code Block Export
 #+end_src
 
 * Research Tools
@@ -523,3 +518,4 @@ Automating connections to HPC's
     "r 1" '(open-hpc1-directory :wk "Connect to HPC1")  
     "r 2" '(open-hpc2-directory :wk "Connect to HPC2"))
 #+end_src
+
