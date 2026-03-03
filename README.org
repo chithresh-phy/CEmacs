@@ -424,7 +424,7 @@ For file conversion using pandoc
 ** Latex Export
 #+begin_src emacs-lisp
   (setq org-latex-src-block-backend 'engraved)            ; Set src block formatting backend to Engraved
-  (setq org-latex-engraved-theme 'modus-operandi-tinted)  ; Set doom-one-light theme for Latex Code Block Export
+  ;;(setq org-latex-engraved-theme 'modus-operandi-tinted)  ; Set modus-operandi-tinted theme for Latex Code Block Export
 #+end_src
 
 * Research Tools
